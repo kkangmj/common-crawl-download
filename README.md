@@ -1,50 +1,58 @@
-[![Build Status](https://github.com/centic9/CommonCrawlDocumentDownload/actions/workflows/gradle-build.yml/badge.svg)](https://github.com/centic9/CommonCrawlDocumentDownload/actions)
-[![Gradle Status](https://gradleupdate.appspot.com/centic9/CommonCrawlDocumentDownload/status.svg?branch=master)](https://gradleupdate.appspot.com/centic9/CommonCrawlDocumentDownload/status)
-[![Release](https://img.shields.io/github/release/centic9/CommonCrawlDocumentDownload.svg)](https://github.com/centic9/CommonCrawlDocumentDownload/releases)
-[![GitHub release](https://img.shields.io/github/release/centic9/CommonCrawlDocumentDownload.svg?label=changelog)](https://github.com/centic9/CommonCrawlDocumentDownload/releases/latest)
-[![Tag](https://img.shields.io/github/tag/centic9/CommonCrawlDocumentDownload.svg)](https://github.com/centic9/CommonCrawlDocumentDownload/tags)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.dstadler/commoncrawldownload/badge.svg?style=flat)](https://maven-badges.herokuapp.com/maven-central/org.dstadler/commoncrawldownload) 
-[![Maven Central](https://img.shields.io/maven-central/v/org.dstadler/commoncrawldownload.svg)](https://maven-badges.herokuapp.com/maven-central/org.dstadler/commoncrawldownload)
 
-This is a small tool to find matching URLs and download the corresponding binary data from the CommonCrawl indexes.
+This is a simple tool to download corresponding binary data from CommonCrawl indexes. Forked from [CommonCrawlDocumentDownload](https://github.com/centic9/CommonCrawlDocumentDownload) project.
 
-Support for the newer URL Index (http://blog.commoncrawl.org/2015/04/announcing-the-common-crawl-index/) is available, older URL Index as described at https://github.com/trivio/common_crawl_index and 
-http://blog.commoncrawl.org/2013/01/common-crawl-url-index/ is still available in the "oldindex" package.
+## What's Different
+What's different from CommonCrawlDocumentDownload is options. This project supports/will support lots of options.
 
-Please note that a full run usually finds a huge number of files and thus downloading will require a large 
-amount of time and lots of disk-space if the data is stored locally!
+## Further support
+### Options
+- Include or exclude specific file extension for download
+- Adjust download speed and location. Due to download speed, sometimes CommonCrawl server sends 503 error. 
 
-> **_NOTE:_**  CommonCrawl only stores up to 1MB per file and cuts off any bytes exceeding this length. So larger documents will be truncated and might not be valid and parsable any more. You can try to download the original file via the URL that is part of the crawl-data, but this project does not implement this due to potential "crawling" restrictions on target websites.
+### New
+- Without typing lookupURLs and downloadDocumnets, fetch index and download document at once
+
+### Etc
+- Log is huge and long to read. Soon remove unnecessary part of log
 
 ## Getting started
-
-### Grab it
-
-    git clone https://github.com/centic9/CommonCrawlDocumentDownload.git
 
 ### Build it and create the distribution files
 
     cd CommonCrawlDocumentDownload
     ./gradlew check
 
-### Run it
-
-#### Fetch a list of interesting documents
+### Fetch a list of interesting documents
 
     ./gradlew lookupURLs
     
 Reads the current Common Crawl URL index data and extracts all URLs for 
 interesting mime-types or file extensions, stores the URLs in a file 
 called `commoncrawl-CC-MAIN-<year>-<crawl>.txt`
+
+There are some options. 
+
+#### Specify key
+
+    ./gradlew lookupURLs -Pkey='YYYY-NN'
+
+If it's not set, key will be '2023-14'. [Here](https://index.commoncrawl.org/) is list of keys.
         
-#### Download documents
+### Download documents
 
     ./gradlew downloadDocuments
 
 Uses the URLs listed in `commoncrawl-CC-MAIN-<year>-<crawl>.txt` to 
-download the documents from the Common Crawl
+download the documents from the Common Crawl.
 
-#### Deduplicate files
+### Download documents with key
+
+    ./gradlew downloadDocuments
+
+Uses the URLs listed in `commoncrawl-CC-MAIN-<year>-<crawl>.txt` to
+download the documents from the Common Crawl.
+
+### Deduplicate files
 
     ./gradlew deduplicate
 
@@ -52,7 +60,7 @@ Some files have equal content, this task will detect these based on file-size
 and content-hash and move all duplicates to a backup-directory to leave only
 unique files in place.
 
-#### Deprecated: Download documents from the old-index
+### Deprecated: Download documents from the old-index
 
     ./gradlew downloadOldIndex
 
@@ -79,14 +87,6 @@ There are a few things that you can tweak:
 in class `org.dstadler.commoncrawl.index.DownloadURLIndex`, this way you can also 
 re-start a download that was interrupted before.
 
-### Adjust which commoncrawl-index is fetched
-
-CommonCrawl periodically runs crawls and publishes them. You can switch to newer crawls by 
-adjusting the constant `CURRENT_CRAWL` in [DownloadURLIndex.java](src/main/java/org/dstadler/commoncrawl/index/DownloadURLIndex.java#L32) to the proper `<year>-<week>` 
-number of the newer crawl. 
-
-See https://commoncrawl.org/connect/blog/ for announcemnts of the latest crawls.
-
 ### Ideas
 
 * Old Index: By adding a new implementation of `BlockProcesser` (likely re-using existing stuff by deriving from one of the
@@ -105,20 +105,6 @@ locally, which will avoid using too much disk-space
 * Avg. size per file: 221613
 * Needed storage: 1911954989425 bytes = 1.7TB!
 
-### Related projects/pages
-
-* http://commoncrawl.org/
-* http://commoncrawl.org/the-data/examples/
-* https://github.com/trivio/common_crawl_index
-* https://github.com/wiseman/common_crawl_index
-* https://github.com/ikreymer/cc-index-server
-* https://github.com/ikreymer/webarchive-indexing
-* https://github.com/ikreymer/cdx-index-client
-* https://github.com/internetarchive/webarchive-commons
-* https://github.com/iipc/webarchive-commons
-* https://github.com/ikreymer/pywb
-* http://decalage.info/download_mso_files
-
 ### Release it
 
     ./gradlew --console=plain release && ./gradlew closeAndReleaseRepository
@@ -126,12 +112,8 @@ locally, which will avoid using too much disk-space
 * This should automatically release the new version on MavenCentral
 * Afterwards go to the [Github releases page](https://github.com/centic9/commons-dost/releases) and add release-notes
 
-## Support this project
-
-If you find this library useful and would like to support it, you can [Sponsor the author](https://github.com/sponsors/centic9)
-
 ## Licensing
 
-* CommonCrawlDocumentDownload is licensed under the [BSD 2-Clause License].
+* common-crawl-download is licensed under the [BSD 2-Clause License].
 
 [BSD 2-Clause License]: https://www.opensource.org/licenses/bsd-license.php

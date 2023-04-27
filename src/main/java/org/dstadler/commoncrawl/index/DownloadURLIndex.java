@@ -23,40 +23,56 @@ import org.dstadler.commons.http.HttpClientWrapper;
 import org.dstadler.commons.logging.jdk.LoggerFactory;
 
 import java.io.*;
+import java.util.Arrays;
 import java.util.logging.Logger;
 
 public class DownloadURLIndex {
-    private static final Logger log = LoggerFactory.make();
-
-    // https://commoncrawl.org/connect/blog/
-    public static final String CURRENT_CRAWL = "CC-MAIN-2022-49";
-	public static final File COMMON_CRAWL_FILE = new File("commoncrawl-" + CURRENT_CRAWL + ".txt");
+  	private static final Logger log = LoggerFactory.make();
 
 	private static final int START_INDEX = 0;
-    private static final int END_INDEX = 299;
 
-    private static final String URL_FORMAT = COMMON_CRAWL_URL +
-			"cc-index/collections/" + CURRENT_CRAWL + "/indexes/cdx-%05d.gz";
+	private static final int END_INDEX = 299;
+
+	private static String URL_FORMAT;
+
+	private static File COMMON_CRAWL_FILE;
+
+	private static String KEY;
 
 	private static final JsonFactory JSON_FACTORY = new JsonFactory();
 
     private static final MappedCounter<String> FOUND_MIME_TYPES = new MappedCounterImpl<>();
 
-    private static int index = START_INDEX;
+	private static final String HTTP_INVALID_KEY = "404";
+
+	private static final String HTTP_TOO_MUCH_REQUEST = "503";
+
+	private static int index = START_INDEX;
+
+	private static void init(String key) {
+		KEY = key;
+		URL_FORMAT = COMMON_CRAWL_URL + "cc-index/collections/CC-MAIN-" + key + "/indexes/cdx-%05d.gz";
+		COMMON_CRAWL_FILE = new File("commoncrawl-" + key + ".txt");
+	}
 
     public static void main(String[] args) throws Exception {
 		LoggerFactory.initLogging();
 
+		init(args[0].trim());
+
 		log.info("Processing index files starting from index " + index + " with pattern " + URL_FORMAT);
 		for(; index <= END_INDEX; index++) {
-			try {
-				try (HttpClientWrapper client = new HttpClientWrapper("", null, 600_000)) {
-					handleCDXFile(client.getHttpClient(), index);
-				}
+			try (HttpClientWrapper client = new HttpClientWrapper("", null, 600_000)) {
+				handleCDXFile(client.getHttpClient(), index);
 			} catch (IOException e) {
+				if (e.getMessage().contains(HTTP_INVALID_KEY)) {
+					log.info("Key is not valid " + KEY + ": " + e);
+					return;
+				}
+
 				log.info("Retry once starting at file " + index + ": " + e);
 
-				if (e.getMessage().contains("503")) {
+				if (e.getMessage().contains(HTTP_TOO_MUCH_REQUEST)) {
 					// wait longer if we get a "503" which is how the server indicates "Please reduce your request rate"
 					Thread.sleep(300_000);
 				} else {

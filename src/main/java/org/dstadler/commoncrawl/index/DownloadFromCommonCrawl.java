@@ -1,17 +1,15 @@
 package org.dstadler.commoncrawl.index;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.logging.Logger;
-
 import org.apache.commons.lang3.StringUtils;
 import org.dstadler.commoncrawl.Utils;
 import org.dstadler.commons.http.HttpClientWrapper;
 import org.dstadler.commons.logging.jdk.LoggerFactory;
 
-import static org.dstadler.commoncrawl.index.DownloadURLIndex.COMMON_CRAWL_FILE;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.logging.Logger;
 
 /**
  * Specialized Processor which reads the position in the Common Crawl
@@ -23,10 +21,17 @@ import static org.dstadler.commoncrawl.index.DownloadURLIndex.COMMON_CRAWL_FILE;
 public class DownloadFromCommonCrawl {
 	private static final Logger log = LoggerFactory.make();
 
+	private static File COMMON_CRAWL_FILE;
+
+	private static void init(String key) {
+		COMMON_CRAWL_FILE = new File("commoncrawl-" + key + ".txt");
+	}
+
     public static void main(String[] args) throws Exception {
 		LoggerFactory.initLogging();
 
 		Utils.ensureDownloadDir();
+		init(args[0].trim());
 
     	try (final HttpClientWrapper client = new HttpClientWrapper("", null, 600_000);
     		BufferedReader reader = new BufferedReader(new FileReader(COMMON_CRAWL_FILE), 1024*1024)) {

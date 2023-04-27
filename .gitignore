@@ -6,6 +6,7 @@ bin/
 build/
 commonurls.txt
 download
+*.txt
 *.warc
 *.wat
 *.wat.gz

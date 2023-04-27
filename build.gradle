@@ -54,6 +54,8 @@ dependencies {
     // for @Nullable
     implementation 'com.google.code.findbugs:jsr305:3.0.2'
 
+    implementation gradleApi()
+
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.dstadler:commons-test:1.0.0.20'
 }
@@ -112,23 +114,27 @@ publishing {
             pom {
                 name = 'CommonCrawl Document Download'
                 description = 'Helper tools to download data from CommonCrawl archives'
-                url = 'https://github.com/centic9/CommonCrawlDocumentDownload'
+                url = 'https://github.com/kkangmj/common-crawl-download'
                 licenses {
                     license {
                         name = 'BSD 2-Clause "Simplified" License'
-                        url = 'https://github.com/centic9/CommonCrawlDocumentDownload/blob/master/LICENSE.md'
+                        url = 'https://github.com/kkangmj/common-crawl-download/blob/master/LICENSE.md'
                     }
                 }
                 developers {
+                    developer {
+                        id = 'mangoo'
+                        name = 'Min Ju Kang'
+                    }
                     developer {
                         id = 'centic9'
                         name = 'Dominik Stadler'
                     }
                 }
                 scm {
-                    connection = 'scm:git@github.com:centic9/CommonCrawlDocumentDownload'
-                    developerConnection = 'scm:git@github.com:centic9/CommonCrawlDocumentDownload'
-                    url = 'https://github.com/centic9/CommonCrawlDocumentDownload'
+                    connection = 'scm:git@github.com:kkangmj/common-crawl-download'
+                    developerConnection = 'scm:git@github.com:kkangmj/common-crawl-download'
+                    url = 'https://github.com/kkangmj/common-crawl-download'
                 }
             }
         }
@@ -157,6 +163,8 @@ task lookupURLs(type:JavaExec,dependsOn: compileJava) {
             '-Xmx128m'
     ]
 
+    args = [project.hasProperty('key') ? project.property('key').toString().replace('-Pkey=', '') : '2023-14']
+
     mainClass = 'org.dstadler.commoncrawl.index.DownloadURLIndex'
     classpath = sourceSets.main.runtimeClasspath
 }
@@ -179,6 +187,8 @@ task downloadDocuments(type:JavaExec,dependsOn: compileJava) {
     jvmArgs = [
             '-Xmx128m'
     ]
+
+    args = [project.hasProperty('key') ? project.property('key').toString().replace('-Pkey=', '') : '2023-14']
 
     mainClass = 'org.dstadler.commoncrawl.index.DownloadFromCommonCrawl'
     classpath = sourceSets.main.runtimeClasspath
