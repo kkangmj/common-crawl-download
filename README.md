@@ -1,8 +1,12 @@
 
 This is a simple tool to download corresponding binary data from CommonCrawl indexes. Forked from [CommonCrawlDocumentDownload](https://github.com/centic9/CommonCrawlDocumentDownload) project.
 
+<br>
+
 ## What's Different
 What's different from CommonCrawlDocumentDownload is options. This project supports/will support lots of options.
+
+<br>
 
 ## Further support
 ### Options
@@ -14,6 +18,8 @@ What's different from CommonCrawlDocumentDownload is options. This project suppo
 
 ### Etc
 - Log is huge and long to read. Soon remove unnecessary part of log
+
+<br>
 
 ## Getting started
 
@@ -36,20 +42,13 @@ There are some options.
 
     ./gradlew lookupURLs -Pkey='YYYY-NN'
 
-If it's not set, key will be '2023-14'. [Here](https://index.commoncrawl.org/) is list of keys.
+Default key is '2023-14'. [Here](https://index.commoncrawl.org/) is list of keys.
         
 ### Download documents
 
     ./gradlew downloadDocuments
 
 Uses the URLs listed in `commoncrawl-CC-MAIN-<year>-<crawl>.txt` to 
-download the documents from the Common Crawl.
-
-### Download documents with key
-
-    ./gradlew downloadDocuments
-
-Uses the URLs listed in `commoncrawl-CC-MAIN-<year>-<crawl>.txt` to
 download the documents from the Common Crawl.
 
 ### Deduplicate files
@@ -60,12 +59,7 @@ Some files have equal content, this task will detect these based on file-size
 and content-hash and move all duplicates to a backup-directory to leave only
 unique files in place.
 
-### Deprecated: Download documents from the old-index
-
-    ./gradlew downloadOldIndex
-
-Starts downloading the URL index files from the old index and looks 
-at each URL, downloading binary data from the common crawl archives.
+<br>
 
 ## The longer stuff
 
@@ -87,12 +81,6 @@ There are a few things that you can tweak:
 in class `org.dstadler.commoncrawl.index.DownloadURLIndex`, this way you can also 
 re-start a download that was interrupted before.
 
-### Ideas
-
-* Old Index: By adding a new implementation of `BlockProcesser` (likely re-using existing stuff by deriving from one of the
-available implementations), you can do things like streaming processing of the file instead of storing the file
-locally, which will avoid using too much disk-space
-
 ### Estimates (based on Old Index)
 
 * Size of overall URL Index is 233689120776, i.e. 217GB
@@ -111,6 +99,8 @@ locally, which will avoid using too much disk-space
     
 * This should automatically release the new version on MavenCentral
 * Afterwards go to the [Github releases page](https://github.com/centic9/commons-dost/releases) and add release-notes
+
+<br>
 
 ## Licensing
 

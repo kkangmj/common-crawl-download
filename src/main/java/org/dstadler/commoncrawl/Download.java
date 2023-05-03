@@ -6,7 +6,6 @@ import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.dstadler.commoncrawl.oldindex.ProcessAndDownload;
 import org.dstadler.commons.http.HttpClientWrapper;
 import org.dstadler.commons.logging.jdk.LoggerFactory;
 
@@ -18,9 +17,6 @@ import java.util.logging.Logger;
 /**
  * Download files from a list of urls stored in a file, convert the reversed domain
  * to normal URLs and try to download them.
- *
- *  Note: This is now superseded by reading the binary data directly
- *  from the Common Crawl archive via {@link ProcessAndDownload}.
  *
  * @author dominik.stadler
  */

@@ -36,9 +36,6 @@ public class Utils {
     public static final int BLOCK_SIZE = 65536;
 
     public static final String COMMON_CRAWL_URL = "https://data.commoncrawl.org/";        // https://commoncrawl.s3.amazonaws.com/
-    public static final String INDEX_URL =
-            "https://commoncrawl.s3.amazonaws.com/projects/url-index/url-index.1356128792";
-            // COMMON_CRAWL_URL + "projects/url-index/url-index.1356128792";
 
     public static final int HEADER_BLOCK_SIZE = 8;
     public static File DOWNLOAD_DIR = new File("../download");
