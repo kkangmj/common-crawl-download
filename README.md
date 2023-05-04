@@ -4,7 +4,7 @@ This is a simple tool to download corresponding binary data from CommonCrawl ind
 <br>
 
 ## What's Different
-What's different from CommonCrawlDocumentDownload is options. This project supports/will support lots of options.
+Adjust options by revising `application.yml`. 
 
 <br>
 
@@ -58,47 +58,6 @@ download the documents from the Common Crawl.
 Some files have equal content, this task will detect these based on file-size
 and content-hash and move all duplicates to a backup-directory to leave only
 unique files in place.
-
-<br>
-
-## The longer stuff
-
-### Change it
-
-Run unit tests
-
-    ./gradlew check jacocoTestReport
-
-#### Adjust which files are found
-
-There are a few things that you can tweak:
-
-* The file-extensions that are detected as download-able files are handled in the class `Extensions`.
-* The mime-types that are detected as download-able files isare handled in the class `MimeTypes`.
-* Adjust the name of the list of found files in `DownloadURLIndex.COMMON_CRAWL_FILE`.
-* Adjust the location where files are downloaded to in `Utils.DOWNLOAD_DIR`.
-* The starting file-index (of the approximately 300 cdx-files) is currently set as constant 
-in class `org.dstadler.commoncrawl.index.DownloadURLIndex`, this way you can also 
-re-start a download that was interrupted before.
-
-### Estimates (based on Old Index)
-
-* Size of overall URL Index is 233689120776, i.e. 217GB
-* Header: 6 Bytes
-* Index-Blocks: 2644
-* Block-Size: 65536
-* => Data-Blocks: 3563169
-* Aprox. Files per Block: 2.421275
-* Resulint aprox. number of files: 8627412
-* Avg. size per file: 221613
-* Needed storage: 1911954989425 bytes = 1.7TB!
-
-### Release it
-
-    ./gradlew --console=plain release && ./gradlew closeAndReleaseRepository
-    
-* This should automatically release the new version on MavenCentral
-* Afterwards go to the [Github releases page](https://github.com/centic9/commons-dost/releases) and add release-notes
 
 <br>
 
